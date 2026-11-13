@@ -24,3 +24,6 @@ dist-ssr
 
 # Rust contract build output
 target/
+
+# Vercel local build output / project link
+.vercel

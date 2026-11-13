@@ -1,49 +1,73 @@
-# PayMe — project guide for Claude Code
+# PayMe — repository guide for reviewers and AI agents
 
-## What this is
-PayMe lets African freelancers turn an invoice into a private payment link their client can pay from any blockchain. Built for the NEAR HACKATHON (deadline 2026-11-14 23:59 UTC). Tracks: Real-World Money, Privacy & Private AI.
+PayMe turns an invoice into a private payment link on NEAR. It uses three NEAR technologies, each of which really runs:
 
-Three NEAR technologies, each must really work (no faking):
-1. **NEAR AI Cloud**: reads pasted invoice text privately inside a TEE and returns an attestation/signature we verify and show.
-2. **NEAR Intents (1Click API)**: live cross-chain quote ("pay with USDC on Base → freelancer gets USDC on NEAR"). Intents is mainnet-only, so we use `dry: true` quotes. No funds move. The UI already labels this "preview".
-3. **NEAR smart contract on testnet**: records invoices (amount, recipient, fingerprint, status) and processes real testnet NEAR payments.
+1. **NEAR AI Cloud:** parses invoice text inside a TEE. The server verifies the response signature and attestation with 8 checks.
+2. **NEAR Intents 1Click API:** live `dry: true` cross-chain quotes and the NEAR/USD price.
+3. **A Rust smart contract on NEAR testnet** (`payme-invoices.testnet`): records invoices (fingerprint only, no personal details) and settles real testnet NEAR payments.
 
-## Hard rules
-- **Zero cost.** Testnet only for transactions. NEAR AI Cloud uses the free hackathon credits. Never require the user to spend money.
-- **Don't redesign the frontend.** `src/App.tsx` (UI, built in Bolt) stays visually the same. You may only make small changes there when wiring is impossible otherwise (e.g. wallet redirect handling, a "fingerprint verified" line). All data access goes through `src/lib/api.ts`. Keep its exported types and function names EXACTLY as they are.
-- **Privacy by design.** Invoice details (client name, description) are NEVER stored on a server or on-chain. They live in the payment link after `#`. On-chain we store only: id, recipient, amount, fingerprint (sha256 of the link data), status, timestamps, payer.
-- **Never fake verification.** If NEAR AI Cloud is unavailable or attestation can't be verified, return `verified: false` and say why. A clearly labelled local fallback parser is OK.
-- **No secrets in the repo.** Keys go in `.env` (gitignored). Keep `.env.example` updated.
-- **Windows dev machine.** Commands must work in PowerShell. Use cross-platform npm scripts (no `rm -rf`, no bash-only syntax).
-- Before calling any external API, check its current docs (docs.near.org, docs.near.ai, github.com/nearai/cloud-api, docs.near-intents.org). Don't guess endpoints, contract addresses or SDK versions.
+Built for the NEAR hackathon (Nov 12–14, 2026). Tracks: Real-World Money, and Privacy & Private AI. Human-facing docs are in [README.md](README.md).
 
-## Folder layout
+## Architecture
+
 ```
-/                 Vite + React + TS + Tailwind frontend (from Bolt)
-  src/App.tsx     all UI pages (Landing, /new, /pay/:id, /dashboard)
-  src/lib/api.ts  the ONLY data layer the UI uses
-  src/lib/*.ts    helpers you add (near.ts wallet/RPC, link.ts encode/fingerprint)
-/api              serverless functions (Vercel format), TypeScript
-/contract         Rust NEAR smart contract (near-sdk) + tests
-README.md  RESULTS.md  LICENSE (MIT)  .env.example  CLAUDE.md
+Browser (Vite + React)                    Vercel functions (Node, Web Request/Response)
+  src/App.tsx      UI (Bolt design)         api/parse-invoice.ts → server/nearai.ts → NEAR AI Cloud
+  src/lib/api.ts   the ONLY data layer        └─ server/verify.ts  (ECDSA, Intel TDX via dcap-qvl, NVIDIA NRAS)
+  src/lib/near.ts  NEAR Connect + RPC       api/quote.ts         → server/oneclick.ts → 1Click /v0/quote (dry)
+  src/lib/link.ts  link + sha256            api/near-price.ts    → server/oneclick.ts → 1Click /v0/tokens
+  src/lib/chain.ts pure helpers
+        │ wallet-signed create_invoice / pay_invoice, RPC view calls
+        ▼
+  contract/src/lib.rs  (near-sdk 5.30.1)  deployed at payme-invoices.testnet
 ```
 
-## Link format
-`{origin}/pay/{id}#{linkData}`, where `linkData` = base64url(JSON of `{id, clientName, description, amountUsd, dueDate, recipient, createdAt}`).
-`fingerprint` = hex sha256 of the decoded linkData string. The pay page recomputes it and compares it with the on-chain record to detect tampered links.
+- `api/` holds **only** the three endpoint files, because Vercel turns every file in `api/` into a function. Shared code and server tests live in `server/`.
+- `npm run dev` serves the frontend and `/api` from one Vite process ([`vite-api-plugin.ts`](vite-api-plugin.ts)). No Vercel CLI is needed.
 
-## Env vars (see .env.example)
-- `NEAR_AI_API_KEY`: NEAR AI Cloud key (server only)
-- `NEAR_AI_MODEL`: model id for invoice parsing
-- `ONECLICK_JWT`: optional
-- `INTENTS_QUOTE_RECIPIENT`: a mainnet NEAR account used only as the recipient in dry-run quotes
-- `VITE_CONTRACT_ID`: deployed testnet contract, e.g. `payme-xyz.testnet`
-- `VITE_NEAR_NETWORK=testnet`
+## Where each NEAR integration lives
 
-## Commands (keep these working)
-- `npm run dev`: frontend + /api together, one command, no Vercel login needed
-- `npm run build`, `npm run typecheck`
-- `npm run contract:test`, `npm run contract:build`, `npm run contract:deploy`
+| Integration | Files | Key functions |
+|---|---|---|
+| NEAR AI Cloud inference + verification | `server/nearai.ts`, `server/verify.ts`, `api/parse-invoice.ts` | `parseWithNearAi`, `verifyCompletion`, `verifyTdxQuote`, `checkReportData`, `checkComposeHash`, `verifyGpu`, `recoverEcdsaSigner` |
+| NEAR Intents 1Click | `server/oneclick.ts`, `api/quote.ts`, `api/near-price.ts` | `getDryQuote`, `buildQuoteRequest`, `findOriginAsset`, `findNearPrice` |
+| Smart contract | `contract/src/lib.rs`, `contract/src/tests.rs` | `create_invoice`, `pay_invoice`, `on_payout`, `get_invoice`, `get_invoices_by_recipient` |
+| Wallet + RPC | `src/lib/near.ts`, `src/lib/api.ts` | `signIn`, `callContract`, `viewContract`, `patchManifestForTestnet`; `createInvoice`, `getInvoice`, `payOnNear`, `listMyInvoices` |
 
-## Definition of done
-A judge can clone the repo, follow the README's "do X, see Y" steps, and see: invoice parsed by NEAR AI Cloud with a real attestation, a live 1Click quote, and a real testnet payment visible on testnet.nearblocks.io.
+## Run
+
+```bash
+npm ci
+npm run dev            # http://localhost:5173 — works with no .env (labelled fallback parser; quotes and price still live)
+```
+
+Optional `.env` (see `.env.example`): `NEAR_AI_API_KEY`, `NEAR_AI_MODEL`, `INTENTS_QUOTE_RECIPIENT`, `ONECLICK_JWT`, `VITE_CONTRACT_ID`, `VITE_NEAR_NETWORK=testnet`.
+
+## Test
+
+```bash
+npm test               # Vitest, 45 tests, no network or keys (fetch is mocked)
+npm run typecheck      # app + api/server + vite config
+npm run lint
+npm run build
+npm run contract:test  # cargo test, 25 tests (Rust toolchain pinned in contract/rust-toolchain.toml)
+```
+
+CI ([`.github/workflows/ci.yml`](.github/workflows/ci.yml)) runs all of the above on Ubuntu. It also runs a real `vercel build` and calls the built functions with no keys.
+
+## Verify claims
+
+- [docs/CLAIMS.md](docs/CLAIMS.md): every README claim → file/function, test name, or testnet transaction.
+- `npm run verify:sample`: offline re-check of the real attestation in `docs/sample-attestation.json`.
+- `npm run invoice -- PM-2026-V2PN6V`: reads a paid invoice from the contract over public RPC.
+- [RESULTS.md](RESULTS.md): all testnet transactions with nearblocks links.
+
+## Rules for changes
+
+- **Keep `src/lib/api.ts` exports stable.** The UI depends on its exported types and function names.
+- **Never fake verification.** `verified` must stay `failed.length === 0` over real checks. A local fallback must say so (`verified: false`, provider "Local fallback …").
+- **Privacy:** client name and description must never be sent to the chain or stored server-side, and the server must never log invoice text.
+- **Testnet only and zero cost.** No mainnet transactions.
+- **Secrets go only in `.env`**, which is gitignored.
+- **Keep `api/` to endpoint files only.** Add shared code under `server/`.
+- **Commands must work in both PowerShell and bash.**

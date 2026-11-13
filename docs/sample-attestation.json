@@ -1,0 +1,65 @@
+{
+  "_about": "One real response from POST /api/parse-invoice (NEAR AI Cloud, captured 2026-11-13 via npm run dev). Only the attestation is kept: the invoice text and the extracted draft are omitted. Re-check the signature offline with: npm run verify:sample",
+  "endpoint": "POST /api/parse-invoice",
+  "capturedAt": "2026-11-13",
+  "attestation": {
+    "verified": true,
+    "model": "Qwen/Qwen3-VL-30B-A3B-Instruct",
+    "provider": "NEAR AI Cloud",
+    "signature": "0x327d76ce1b096a29aa7dccc7c564bd81ff757cf596065a3369b18668be923ddb04e91f2abf65edbb90c2b8e265e0dc55e88fe31aeecef5c5bd91e459595b6b291c",
+    "proof": {
+      "chatId": "chatcmpl-55272803-16e7-45c3-9cda-142ac389c0e4",
+      "signingAddress": "0x2665cce942fa427ef30d87f4b0bff67fb7645462",
+      "signingAlgo": "ecdsa",
+      "signatureKind": "provider_tee",
+      "signedText": "Qwen/Qwen3-VL-30B-A3B-Instruct:7d94498be716a65fe4d23fb6248767584b1cb8d9d972c82836a815b8f2c478e6:6f494c14c7a809f685dd49be16b321cbcec0d024b1fa353daac2b9f15f32f8b9",
+      "requestHash": "7d94498be716a65fe4d23fb6248767584b1cb8d9d972c82836a815b8f2c478e6",
+      "responseHash": "6f494c14c7a809f685dd49be16b321cbcec0d024b1fa353daac2b9f15f32f8b9",
+      "reportNonce": "939179bf6f1f0b4a7ee690108632e2adf106b42472fe4937bc85628346b31d35",
+      "tcbStatus": "UpToDate",
+      "composeHash": "e8416a02d6f7ce47baaa52e3925b934fd30834b04fc9086b363db9b1d12c729d",
+      "checks": [
+        {
+          "name": "signature covers this request/response",
+          "ok": true,
+          "detail": "signed text = model:sha256(request):sha256(response)"
+        },
+        {
+          "name": "ECDSA signature valid",
+          "ok": true,
+          "detail": "recovers to 0x2665cce942fa427ef30d87f4b0bff67fb7645462"
+        },
+        {
+          "name": "signer is in the attestation report",
+          "ok": true,
+          "detail": "model attestation lists 0x2665cce942fa427ef30d87f4b0bff67fb7645462"
+        },
+        {
+          "name": "fresh nonce",
+          "ok": true,
+          "detail": "report echoes our nonce"
+        },
+        {
+          "name": "Intel TDX quote valid",
+          "ok": true,
+          "detail": "dcap-qvl: TCB UpToDate"
+        },
+        {
+          "name": "report_data binding",
+          "ok": true,
+          "detail": "TDX report_data = signing address + our fresh nonce"
+        },
+        {
+          "name": "app compose measured",
+          "ok": true,
+          "detail": "MRCONFIGID binds compose hash e8416a02d6f7ce47…"
+        },
+        {
+          "name": "NVIDIA GPU attestation",
+          "ok": true,
+          "detail": "NRAS: overall attestation result true"
+        }
+      ]
+    }
+  }
+}

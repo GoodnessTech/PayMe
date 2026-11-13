@@ -2,9 +2,9 @@
 // Live NEAR Intents (1Click) DRY-RUN quote: "pay with <token> on <chain>,
 // freelancer receives exactly amountUsd USDC on NEAR". No funds move.
 
-import { assertMethod, assertSameOrigin, errorResponse, HttpError, json, readJsonBody } from "./_lib/http.js";
-import { MAX_AMOUNT_USD } from "./_lib/invoice.js";
-import { getDryQuote } from "./_lib/oneclick.js";
+import { assertMethod, assertSameOrigin, errorResponse, HttpError, json, readJsonBody } from "../server/http.js";
+import { MAX_AMOUNT_USD } from "../server/invoice.js";
+import { getDryQuote } from "../server/oneclick.js";
 
 export async function POST(request: Request): Promise<Response> {
   try {

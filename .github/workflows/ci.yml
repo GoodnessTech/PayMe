@@ -1,0 +1,67 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+    tags: ["*"]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  web:
+    name: Frontend + API (typecheck, lint, test, build)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run lint
+      - run: npm test
+      - run: npm run build
+
+  contract:
+    name: Smart contract (cargo test + wasm compile)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+      - uses: dtolnay/rust-toolchain@master
+        with:
+          toolchain: "1.99.1" # same as contract/rust-toolchain.toml
+          targets: wasm32-unknown-unknown
+      - uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: contract
+      - run: npm run contract:test
+      - name: Contract compiles to wasm
+        working-directory: contract
+        run: cargo build --release --target wasm32-unknown-unknown
+
+  vercel-build:
+    name: Vercel build + call the built functions (no keys)
+    runs-on: ubuntu-latest
+    env:
+      VERCEL_TELEMETRY_DISABLED: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - name: vercel build (local, no Vercel account needed)
+        run: |
+          mkdir -p .vercel
+          echo '{"projectId":"ci","orgId":"ci","settings":{"framework":"vite","nodeVersion":"24.x"}}' > .vercel/project.json
+          npx --yes vercel@65.15.0 build --yes
+      - name: Call each built function
+        run: node scripts/check-vercel-build.mjs

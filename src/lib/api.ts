@@ -26,7 +26,6 @@ import {
   CONTRACT_ID,
   accountExists,
   callContract,
-  explorerAccountUrl,
   explorerTxUrl,
   findPaymentTxHash,
   signIn,
@@ -97,9 +96,7 @@ export type PaymentDetails = {
   amountNear: string;
   rateUsd: number;
   payer: string | null;
-  contractId: string;
   createTxUrl?: string;
-  payerUrl?: string;
 };
 
 // ------------------------------------------------------------------ storage
@@ -219,9 +216,7 @@ function rememberDetails(chain: ChainInvoice): PaymentDetails {
     amountNear: formatNear(chain.amount_yocto),
     rateUsd: rateFromChain(chain),
     payer: chain.payer,
-    contractId: CONTRACT_ID,
     createTxUrl: tx.create ? explorerTxUrl(tx.create) : undefined,
-    payerUrl: chain.payer ? explorerAccountUrl(chain.payer) : undefined,
   };
   details.set(chain.id, d);
   invoiceAmounts.set(chain.id, chain.amount_usd_cents / 100);

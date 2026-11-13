@@ -88,3 +88,28 @@ Invoice `PM-2026-QS8JBE`: $0.50 = 0.14164 NEAR at $3.53/NEAR.
 | `pay_invoice` from the app (client `payme-client-demo.testnet`) | [`7cb2bMzX9spEjXmKKmDZRcHCKgVXL7K4q3guVUpbd5dy`](https://testnet.nearblocks.io/txns/7cb2bMzX9spEjXmKKmDZRcHCKgVXL7K4q3guVUpbd5dy) |
 
 Invoice `PM-2026-V2PN6V`: $5.00 = 1.43266 NEAR. On-chain status is `Paid`, payer `payme-client-demo.testnet`, paid 6 min 50 s after creation.
+
+## NEAR AI Cloud: a real verified parse
+
+One real `POST /api/parse-invoice` response, captured 2026-11-13. The full attestation is in [docs/sample-attestation.json](docs/sample-attestation.json); the invoice text is omitted. Re-check it offline with `npm run verify:sample`.
+
+| Field | Value |
+|---|---|
+| verified | **true** |
+| model | `Qwen/Qwen3-VL-30B-A3B-Instruct` |
+| provider | NEAR AI Cloud |
+| signing address | `0x2665cce942fa427ef30d87f4b0bff67fb7645462` (ecdsa, provider_tee) |
+| signature | `0x327d76ce1b096a29aa…5b6b291c` |
+| chat id | `chatcmpl-55272803-16e7-45c3-9cda-142ac389c0e4` |
+| TCB status | UpToDate |
+
+| # | Check | Result | Detail |
+|---|---|---|---|
+| 1 | signature covers this request/response | ✓ pass | signed text = model:sha256(request):sha256(response) |
+| 2 | ECDSA signature valid | ✓ pass | recovers to 0x2665cce942fa427ef30d87f4b0bff67fb7645462 |
+| 3 | signer is in the attestation report | ✓ pass | model attestation lists 0x2665cce942fa427ef30d87f4b0bff67fb7645462 |
+| 4 | fresh nonce | ✓ pass | report echoes our nonce |
+| 5 | Intel TDX quote valid | ✓ pass | dcap-qvl: TCB UpToDate |
+| 6 | report_data binding | ✓ pass | TDX report_data = signing address + our fresh nonce |
+| 7 | app compose measured | ✓ pass | MRCONFIGID binds compose hash e8416a02d6f7ce47… |
+| 8 | NVIDIA GPU attestation | ✓ pass | NRAS: overall attestation result true |

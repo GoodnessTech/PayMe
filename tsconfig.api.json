@@ -16,6 +16,7 @@
     "noFallthroughCasesInSwitch": true
   },
   "include": [
-    "api"
+    "api",
+    "server"
   ]
 }

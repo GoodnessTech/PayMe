@@ -11,21 +11,15 @@ export const EXPLORER_URL = "https://testnet.nearblocks.io";
 const NEARBLOCKS_API = "https://api-testnet.nearblocks.io/v3";
 const RPC_TIMEOUT_MS = 10_000;
 
-export const CONTRACT_ID = (import.meta.env.VITE_CONTRACT_ID ?? "").trim();
+/** Defaults to the deployed PayMe contract so the app works with no .env. */
+export const DEFAULT_CONTRACT_ID = "payme-invoices.testnet";
+export const CONTRACT_ID = (import.meta.env.VITE_CONTRACT_ID ?? "").trim() || DEFAULT_CONTRACT_ID;
 if ((import.meta.env.VITE_NEAR_NETWORK ?? "testnet") !== "testnet") {
   throw new Error("PayMe is testnet-only: set VITE_NEAR_NETWORK=testnet");
 }
 
 export function explorerTxUrl(hash: string): string {
   return `${EXPLORER_URL}/txns/${hash}`;
-}
-export function explorerAccountUrl(accountId: string): string {
-  return `${EXPLORER_URL}/address/${accountId}`;
-}
-
-function requireContract(): string {
-  if (!CONTRACT_ID) throw new Error("VITE_CONTRACT_ID is not set. Add it to .env (see .env.example).");
-  return CONTRACT_ID;
 }
 
 // ---------------------------------------------------------------- wallet
@@ -122,13 +116,12 @@ export async function callContract(
   depositYocto: string,
   gas: string,
 ): Promise<{ txHash: string; returnValue: unknown }> {
-  const contractId = requireContract();
   const current = await currentWallet();
   if (!current) throw new Error("Connect a NEAR wallet first.");
   const outcome = (await current.wallet.signAndSendTransaction({
     network: NETWORK,
     signerId: current.accountId,
-    receiverId: contractId,
+    receiverId: CONTRACT_ID,
     actions: [{ type: "FunctionCall", params: { methodName, args, gas, deposit: depositYocto } }],
   })) as Outcome;
   const txHash = outcome?.transaction?.hash ?? outcome?.transaction_outcome?.id ?? "";
@@ -181,7 +174,7 @@ export async function viewContract<T>(methodName: string, args: Record<string, u
   const result = await rpc<{ result: number[] }>("query", {
     request_type: "call_function",
     finality: "optimistic",
-    account_id: requireContract(),
+    account_id: CONTRACT_ID,
     method_name: methodName,
     args_base64: btoa(JSON.stringify(args)),
   });
@@ -208,7 +201,7 @@ export async function accountExists(accountId: string): Promise<boolean> {
  */
 export async function findPaymentTxHash(invoiceId: string, payer: string): Promise<string | null> {
   try {
-    const list = await fetch(`${NEARBLOCKS_API}/accounts/${encodeURIComponent(requireContract())}/txns?per_page=25`, {
+    const list = await fetch(`${NEARBLOCKS_API}/accounts/${encodeURIComponent(CONTRACT_ID)}/txns?per_page=25`, {
       signal: AbortSignal.timeout(RPC_TIMEOUT_MS),
     });
     if (!list.ok) return null;

@@ -2,8 +2,8 @@
 // NEAR/USD from the wNEAR entry of the 1Click token list (cached 60 s). Used to
 // convert an invoice's USD amount into testnet NEAR.
 
-import { assertMethod, assertSameOrigin, errorResponse, json } from "./_lib/http.js";
-import { findNearPrice, getTokens, tokensFetchedAt } from "./_lib/oneclick.js";
+import { assertMethod, assertSameOrigin, errorResponse, json } from "../server/http.js";
+import { findNearPrice, getTokens, tokensFetchedAt } from "../server/oneclick.js";
 
 export const PRICE_TTL_MS = 60_000;
 

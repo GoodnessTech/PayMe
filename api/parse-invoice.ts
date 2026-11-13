@@ -4,9 +4,9 @@
 // regex parser (verified: false) if NEAR AI Cloud is not configured or fails.
 // The invoice text is never logged or stored.
 
-import { assertMethod, assertSameOrigin, errorResponse, HttpError, json, readJsonBody } from "./_lib/http.js";
-import { fallbackParse, MAX_INVOICE_TEXT } from "./_lib/invoice.js";
-import { DEFAULT_NEAR_AI_MODEL, parseWithNearAi, type AttestationResult } from "./_lib/nearai.js";
+import { assertMethod, assertSameOrigin, errorResponse, HttpError, json, readJsonBody } from "../server/http.js";
+import { fallbackParse, MAX_INVOICE_TEXT } from "../server/invoice.js";
+import { DEFAULT_NEAR_AI_MODEL, parseWithNearAi, type AttestationResult } from "../server/nearai.js";
 
 export const FALLBACK_PROVIDER = "Local fallback (NEAR AI Cloud unavailable)";
 

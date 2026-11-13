@@ -1,5 +1,6 @@
 // Shared helpers for the /api functions (Web-standard Request/Response handlers).
-// Files under api/_lib are not routes: Vercel ignores paths starting with "_".
+// Shared server code lives outside api/ so Vercel only turns the three
+// endpoint files in api/ into functions.
 
 export const EXTERNAL_TIMEOUT_MS = 10_000;
 

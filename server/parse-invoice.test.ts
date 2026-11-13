@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { POST, FALLBACK_PROVIDER } from "./parse-invoice.js";
+import { POST, FALLBACK_PROVIDER } from "../api/parse-invoice.js";
 
 const req = (body: unknown, headers: Record<string, string> = {}) =>
   new Request("http://localhost:5173/api/parse-invoice", {
