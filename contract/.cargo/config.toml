@@ -1,0 +1,6 @@
+[env]
+# near-sdk's unit-testing deps pull in aws-lc-sys (via near-crypto). On Windows it
+# needs the NASM assembler; this makes it use the prebuilt NASM objects shipped
+# inside the aws-lc-sys crate instead, so no extra tool install is required.
+# Ignored on Linux/macOS. Does not affect the wasm contract build.
+AWS_LC_SYS_PREBUILT_NASM = "1"
