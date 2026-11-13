@@ -25,8 +25,18 @@ export function json(body: unknown, status = 200, extraHeaders: Record<string, s
   });
 }
 
+/** True for fetch/body-read timeouts and our own "Timed out after …" errors. */
+export function isTimeoutError(err: unknown): boolean {
+  if (!(err instanceof Error)) return false;
+  return err.name === "TimeoutError" || err.name === "AbortError" || /timed out|aborted due to timeout/i.test(err.message);
+}
+
 export function errorResponse(err: unknown): Response {
   if (err instanceof HttpError) return json({ error: err.message }, err.status);
+  if (isTimeoutError(err)) {
+    console.error("[api] upstream timeout:", (err as Error).message);
+    return json({ error: `An upstream service did not respond within ${EXTERNAL_TIMEOUT_MS / 1000} s. Please try again.` }, 504);
+  }
   // Never echo internals (or request contents) back to the client.
   console.error("[api] unexpected error:", err instanceof Error ? err.message : String(err));
   return json({ error: "Internal server error" }, 500);

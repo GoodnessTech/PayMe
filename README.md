@@ -115,7 +115,7 @@ npm ci
 
 | Run | Expect |
 |---|---|
-| `npm test` | `Test Files  6 passed (6)` · `Tests  45 passed (45)`. Every external call is mocked. |
+| `npm test` | `Test Files  7 passed (7)` · `Tests  48 passed (48)`. Every external call is mocked. |
 | `npm run typecheck && npm run lint && npm run build` | No errors; `✓ built in …` |
 | `npm run verify:sample` | 4× `PASS`, ending `Sample attestation re-verified offline.` This recovers the TEE signer from the real signature in `docs/sample-attestation.json`. |
 | `npm run invoice -- PM-2026-V2PN6V` | Reads the contract over public RPC: `Paid: 1.43266 NEAR for $5.00 to payme-freelancer-demo.testnet, paid by payme-client-demo.testnet` |
@@ -162,7 +162,7 @@ npm run dev                   # → VITE ready, Local: http://localhost:5173/  (
 | Command | What it does | Expected |
 |---|---|---|
 | `npm run dev` | Vite dev server plus the `/api` functions (a small Vite plugin, [`vite-api-plugin.ts`](vite-api-plugin.ts)). No Vercel login. | `Local: http://localhost:5173/` |
-| `npm test` | Vitest unit tests (no network, no keys) | `45 passed` |
+| `npm test` | Vitest unit tests (no network, no keys) | `48 passed` |
 | `npm run typecheck` / `npm run lint` / `npm run build` | TS for app + API + config / ESLint / production build to `dist/` | no errors |
 | `npm run contract:test` | `cargo test` in `contract/` | `25 passed` |
 | `npm run contract:build` | `cargo near build non-reproducible-wasm --no-abi` | `contract/target/near/payme_contract.wasm` (~154 KB) |
@@ -214,6 +214,7 @@ CI runs a real `vercel build` on Linux and calls the three built functions ([`sc
 | [`server/invoice.test.ts`](server/invoice.test.ts) | 9 | Fallback parser on the UI examples, sanitising untrusted model output, date normalisation, `.testnet` account rules |
 | [`server/parse-invoice.test.ts`](server/parse-invoice.test.ts) | 3 | Labelled fallback with no key, fallback on API failure **without logging invoice text**, input validation (400/403/415) |
 | [`src/lib/link.test.ts`](src/lib/link.test.ts) | 4 | Link encoding round-trip, fingerprint matches a real on-chain record, damaged links rejected |
+| [`server/http.test.ts`](server/http.test.ts) | 3 | Upstream timeouts become a clear 504 (including aborts mid-body), and internal errors are hidden behind a generic 500 |
 | [`src/lib/chain.test.ts`](src/lib/chain.test.ts) | 5 | USD→yoctoNEAR, rate recovery, link vs chain mismatch detection, friendly wallet/RPC errors |
 | [`contract/src/tests.rs`](contract/src/tests.rs) | 25 | Every method and every rejection: duplicate id, empty, oversized or invalid ids, bad fingerprint, zero amounts, missing storage deposit, underpayment, paying twice, unknown invoice. Also the excess and storage refunds, payout callback success and failure, pagination. |
 | CI `vercel-build` job | — | Real `vercel build`, then calls each built function with no keys |
@@ -232,6 +233,7 @@ Live testnet evidence (create → pay → read, overpayment refund, double-pay r
 - **Transaction hashes** aren't stored on-chain. Other devices find the payment transaction through the nearblocks indexer, for display only (best effort).
 - **No sandbox integration tests.** `near-sandbox` doesn't support Windows, where this was built. Coverage comes from unit tests plus real testnet transactions.
 - **The fallback parser** is a simple regex parser for when NEAR AI Cloud is unavailable. It is labelled as such and never marked verified.
+- **Dependency advisories.** `npm audit --omit=dev` reports 2 low-severity advisories, both from `elliptic`, a dependency of `@phala/dcap-qvl` (the TDX verifier); npm's only "fix" downgrades the verifier to 0.2.0. The other advisories are in dev-only lint and build tooling, which doesn't ship.
 
 ## Built for the NEAR hackathon
 

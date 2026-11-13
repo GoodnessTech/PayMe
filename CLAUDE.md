@@ -46,7 +46,7 @@ Optional `.env` (see `.env.example`): `NEAR_AI_API_KEY`, `NEAR_AI_MODEL`, `INTEN
 ## Test
 
 ```bash
-npm test               # Vitest, 45 tests, no network or keys (fetch is mocked)
+npm test               # Vitest, 48 tests, no network or keys (fetch is mocked)
 npm run typecheck      # app + api/server + vite config
 npm run lint
 npm run build

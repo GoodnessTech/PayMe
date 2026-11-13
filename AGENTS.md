@@ -6,7 +6,7 @@ Quick start, with no keys needed:
 
 ```bash
 npm ci
-npm test               # 45 Vitest tests, all external calls mocked
+npm test               # 48 Vitest tests, all external calls mocked
 npm run typecheck && npm run lint && npm run build
 npm run contract:test  # 25 Rust tests (needs rustup; toolchain pinned in contract/rust-toolchain.toml)
 npm run verify:sample  # offline re-check of a real NEAR AI Cloud attestation

@@ -65,6 +65,6 @@ Every claim in the [README](../README.md), with where to check it. "Test" means 
 |---|---|
 | Tests need no keys or network | All `fetch` calls in Vitest tests are stubbed (`vi.stubGlobal("fetch", …)`); contract tests use near-sdk's mocked blockchain. CI runs them on a clean Ubuntu runner ([`.github/workflows/ci.yml`](../.github/workflows/ci.yml)). |
 | `npm run dev` works with no `.env` | Code: defaults in `server/nearai.ts` (fallback), `server/oneclick.ts` (`DEFAULT_QUOTE_RECIPIENT`), `src/lib/near.ts` (`DEFAULT_CONTRACT_ID`). |
-| 10 s timeout on every external call; same-origin API | Code: `fetchWithTimeout` / `withTimeout` and `assertSameOrigin` in [`server/http.ts`](../server/http.ts). Test: `validates input` (403 for a foreign Origin). |
+| 10 s timeout on every external call; same-origin API | Code: `fetchWithTimeout` / `withTimeout` and `assertSameOrigin` in [`server/http.ts`](../server/http.ts). Tests: `validates input` (403 for a foreign Origin); `server/http.test.ts › turns upstream timeouts … into a 504`. |
 | Testnet only | Code: [`src/lib/near.ts`](../src/lib/near.ts) throws unless `VITE_NEAR_NETWORK` is `testnet`; [`scripts/deploy-contract.mjs`](../scripts/deploy-contract.mjs) refuses other networks. |
 | Deploys to Vercel as-is | CI job `vercel-build`: real `vercel build`, then [`scripts/check-vercel-build.mjs`](../scripts/check-vercel-build.mjs) calls the three built functions. |
