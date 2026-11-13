@@ -60,3 +60,31 @@ Reproduce the read yourself:
 ```powershell
 near contract call-function as-read-only payme-invoices.testnet get_invoice json-args '{"id":"smoke-mwemw8w4"}' network-config testnet now
 ```
+
+## Phase 3: frontend wired to the contract, NEAR AI Cloud and 1Click
+
+Wallet connection uses **NEAR Connect** (`@hot-labs/near-connect` 0.12.0), the connector docs.near.org recommends; Wallet Selector is deprecated. On testnet the wallet picker lists Meteor Wallet, MyNearWallet, Intear, Ledger, Nightly, Ethereum Wallets and NEAR CLI. RPC reads go to `https://test.rpc.fastnear.com`.
+
+### Automated end-to-end run (2026-11-13)
+
+The link and fingerprint were built with the app's own `src/lib/link.ts`, and the amount was converted at the live `/api/near-price` rate. The two transactions were signed with near-cli-rs, standing in for the wallet clicks. The pay page was then loaded in a real (headless) Chrome.
+
+Invoice `PM-2026-QS8JBE`: $0.50 = 0.14164 NEAR at $3.53/NEAR.
+
+| Step | Transaction / result |
+|---|---|
+| `create_invoice` (freelancer) | [`NWQgHUsPEkAHLKVdyccayr8VH6LccAxDeiJV8GScMXZ`](https://testnet.nearblocks.io/txns/NWQgHUsPEkAHLKVdyccayr8VH6LccAxDeiJV8GScMXZ) |
+| Pay page, before payment | "✓ Link verified against on-chain record", "≈ 0.1416 NEAR at $3.53", Awaiting payment |
+| "Preview route" (Base, USDC) | live 1Click dry-run quote: send ≈ 0.505155 USDC, freelancer receives 0.50 USDC, ~35 s |
+| `pay_invoice` (client, exact on-chain amount) | [`G6FnKcbPsEf4jEm16bRysYZkj32pUJ4dyNRDNMjU5Myn`](https://testnet.nearblocks.io/txns/G6FnKcbPsEf4jEm16bRysYZkj32pUJ4dyNRDNMjU5Myn); `invoice_paid` emitted, `on_payout` returned `true` |
+| Pay page, after payment | Paid, with an explorer link to the pay transaction |
+| Same link with the amount edited (0.5 → 5) | blocked in red: "This link does not match the on-chain record (amount differs)… Do not pay it." |
+
+### Manual wallet run (filled in after testing with real wallet clicks)
+
+| Step | Transaction |
+|---|---|
+| `create_invoice` from the app (freelancer `payme-freelancer-demo.testnet`) | [`3mfbpFWAzhhkD5NMHAfyxKaVAMBYNATK593wQDUC4daA`](https://testnet.nearblocks.io/txns/3mfbpFWAzhhkD5NMHAfyxKaVAMBYNATK593wQDUC4daA) |
+| `pay_invoice` from the app (client `payme-client-demo.testnet`) | [`7cb2bMzX9spEjXmKKmDZRcHCKgVXL7K4q3guVUpbd5dy`](https://testnet.nearblocks.io/txns/7cb2bMzX9spEjXmKKmDZRcHCKgVXL7K4q3guVUpbd5dy) |
+
+Invoice `PM-2026-V2PN6V`: $5.00 = 1.43266 NEAR. On-chain status is `Paid`, payer `payme-client-demo.testnet`, paid 6 min 50 s after creation.
