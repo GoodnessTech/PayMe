@@ -9,8 +9,8 @@
 | | |
 |---|---|
 | Live demo | **https://payme-opal.vercel.app** (Vercel, NEAR testnet) |
-| Demo video | `DEMO_VIDEO_PLACEHOLDER` |
-| Post on X | `X_POST_PLACEHOLDER` |
+| Demo video | [2-minute demo on X](https://x.com/0xSoloWeb3/status/2121709378906554493) (recorded on the live testnet build) |
+| Post on X | https://x.com/0xSoloWeb3/status/2121709378906554493 |
 | Contract (testnet) | [`payme-invoices.testnet`](https://testnet.nearblocks.io/address/payme-invoices.testnet) |
 | Evidence | [RESULTS.md](RESULTS.md) (transactions) · [docs/CLAIMS.md](docs/CLAIMS.md) (every claim → code/test/tx) · [docs/sample-attestation.json](docs/sample-attestation.json) |
 
