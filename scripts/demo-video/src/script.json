@@ -1,0 +1,239 @@
+{
+  "_about": "Single source of truth for the demo story: scene order, durations (seconds), captions (times relative to scene start) and chapter chips. Used by the Remotion composition and by voiceover.mjs.",
+  "fps": 30,
+  "scenes": [
+    {
+      "id": "coldOpen",
+      "duration": 8,
+      "captions": [],
+      "kinetic": [
+        {
+          "from": 0.3,
+          "to": 4.2,
+          "text": "NEAR asked builders: what if software could put money to work?"
+        },
+        {
+          "from": 4.4,
+          "to": 7.8,
+          "text": "Here's the oldest money problem in Africa."
+        }
+      ],
+      "narration": "NEAR asked builders: what if software could put money to work? Here's the oldest money problem in Africa."
+    },
+    {
+      "id": "problem",
+      "duration": 14,
+      "captions": [
+        {
+          "from": 0.4,
+          "to": 6.8,
+          "text": "Tunde designs logos in Lagos. His client pays from another chain."
+        },
+        {
+          "from": 7,
+          "to": 13.8,
+          "text": "Bridges, fees, and his invoices go to AIs he can't see."
+        }
+      ],
+      "narration": "Tunde designs logos in Lagos. His client pays from another chain. Bridges, fees, and his invoices go to A.I.s he can't see."
+    },
+    {
+      "id": "landing",
+      "duration": 5,
+      "clip": "c1_landing",
+      "captions": [
+        {
+          "from": 0.2,
+          "to": 4.9,
+          "text": "PayMe: one private link. Any chain."
+        }
+      ],
+      "narration": "PayMe: one private link. Any chain."
+    },
+    {
+      "id": "create",
+      "duration": 16.5,
+      "clip": "c2_create",
+      "chip": {
+        "text": "LIVE AI · NEAR AI CLOUD · QWEN3 · SHOWN AT 3×",
+        "status": "green"
+      },
+      "captions": [
+        {
+          "from": 0.2,
+          "to": 5,
+          "text": "Paste any invoice."
+        },
+        {
+          "from": 5.2,
+          "to": 16.4,
+          "text": "NEAR AI Cloud reads it inside a sealed enclave."
+        }
+      ],
+      "narration": "Paste any invoice. NEAR A.I. Cloud reads it inside a sealed enclave."
+    },
+    {
+      "id": "proof",
+      "duration": 12,
+      "clip": "c3_proof",
+      "chip": {
+        "text": "8 CHECKS · VERIFIED BEFORE THE BADGE TURNS GREEN",
+        "status": "green"
+      },
+      "captions": [
+        {
+          "from": 0.2,
+          "to": 3.4,
+          "text": "Not “trust us”."
+        },
+        {
+          "from": 3.6,
+          "to": 11.9,
+          "text": "Intel TDX, NVIDIA GPU, signature: 8 checks, all real."
+        }
+      ],
+      "narration": "Not \"trust us\". Intel T.D.X., NVIDIA G.P.U., signature: eight checks, all real."
+    },
+    {
+      "id": "manualCreate",
+      "duration": 9.4,
+      "manual": "manual-create",
+      "chip": {
+        "text": "REAL TESTNET TX · payme-invoices.testnet",
+        "status": "green"
+      },
+      "captions": [
+        {
+          "from": 0.2,
+          "to": 5.6,
+          "text": "One link. The invoice lives only inside it."
+        },
+        {
+          "from": 5.8,
+          "to": 9.3,
+          "text": "No database."
+        }
+      ],
+      "narration": "One link. The invoice lives only inside it. No database."
+    },
+    {
+      "id": "breakIt",
+      "duration": 12,
+      "clip": "c5_tampered",
+      "chip": {
+        "text": "BREAK IT ON PURPOSE",
+        "status": "red"
+      },
+      "captions": [
+        {
+          "from": 0.2,
+          "to": 5.4,
+          "text": "Now let's break it on purpose. Change $5 to $500…"
+        },
+        {
+          "from": 5.6,
+          "to": 11.9,
+          "text": "…the contract's fingerprint doesn't match. Do not pay."
+        }
+      ],
+      "narration": "Now let's break it on purpose. Change five dollars to five hundred... the contract's fingerprint doesn't match. Do not pay."
+    },
+    {
+      "id": "realLink",
+      "duration": 6,
+      "clip": "c5_original",
+      "chip": {
+        "text": "ORIGINAL LINK · CHECKED AGAINST payme-invoices.testnet",
+        "status": "green"
+      },
+      "captions": [
+        {
+          "from": 0.2,
+          "to": 5.9,
+          "text": "The real link checks out against the chain."
+        }
+      ],
+      "narration": "The real link checks out against the chain."
+    },
+    {
+      "id": "quotes",
+      "duration": 12,
+      "clip": "c6_quotes",
+      "chip": {
+        "text": "LIVE NEAR INTENTS 1CLICK QUOTE · DRY RUN, INTENTS IS MAINNET-ONLY",
+        "status": "green"
+      },
+      "captions": [
+        {
+          "from": 0.2,
+          "to": 5.1,
+          "text": "Pay from any chain: USDC on Base."
+        },
+        {
+          "from": 5.4,
+          "to": 11.9,
+          "text": "Or SOL on Solana. Live quotes."
+        }
+      ],
+      "narration": "Pay from any chain: U.S.D.C. on Base. Or SOL on Solana. Live quotes."
+    },
+    {
+      "id": "pay",
+      "duration": 15,
+      "manual": "manual-pay",
+      "clip": "c7_nearblocks",
+      "chip": {
+        "text": "ON-CHAIN · TESTNET.NEARBLOCKS.IO",
+        "status": "green"
+      },
+      "captions": [
+        {
+          "from": 0.2,
+          "to": 14.9,
+          "text": "Or pay on NEAR. One click. On-chain."
+        }
+      ],
+      "narration": "Or pay on NEAR. One click. On-chain."
+    },
+    {
+      "id": "dashboard",
+      "duration": 3.3,
+      "manual": "manual-dashboard",
+      "chip": {
+        "text": "FREELANCER DASHBOARD · LOCAL BUILD · SAME TESTNET CONTRACT",
+        "status": "green"
+      },
+      "captions": [
+        {
+          "from": 0.1,
+          "to": 3.2,
+          "text": "Tunde gets paid. No bridge. No leak."
+        }
+      ],
+      "narration": "Tunde gets paid. No bridge. No leak.",
+      "voOffset": -2.2
+    },
+    {
+      "id": "terminal",
+      "duration": 10,
+      "chip": {
+        "text": "CHECK IT YOURSELF",
+        "status": "green"
+      },
+      "captions": [
+        {
+          "from": 0.3,
+          "to": 9.9,
+          "text": "Judges: every claim has a command, a test, or a transaction."
+        }
+      ],
+      "narration": "Judges: every claim has a command, a test, or a transaction."
+    },
+    {
+      "id": "endCard",
+      "duration": 12,
+      "captions": [],
+      "narration": "Paste it. Share it. Get paid."
+    }
+  ]
+}

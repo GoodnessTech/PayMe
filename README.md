@@ -8,7 +8,7 @@
 
 | | |
 |---|---|
-| Live demo | **`LIVE_URL_PLACEHOLDER`** (Vercel) |
+| Live demo | **https://payme-opal.vercel.app** (Vercel, NEAR testnet) |
 | Demo video | `DEMO_VIDEO_PLACEHOLDER` |
 | Post on X | `X_POST_PLACEHOLDER` |
 | Contract (testnet) | [`payme-invoices.testnet`](https://testnet.nearblocks.io/address/payme-invoices.testnet) |
@@ -92,7 +92,7 @@ If NEAR AI Cloud isn't configured or fails, a **local regex parser** is used ins
 
 ## Try it in 3 minutes (live demo)
 
-Open **`LIVE_URL_PLACEHOLDER`**. You need a NEAR testnet account in Meteor or MyNearWallet for steps (b) and (e); [create one free](https://testnet.mynearwallet.com).
+Open **https://payme-opal.vercel.app**. You need a NEAR testnet account in Meteor or MyNearWallet for steps (b) and (e); [create one free](https://testnet.mynearwallet.com).
 
 | Do | See |
 |---|---|
@@ -102,7 +102,7 @@ Open **`LIVE_URL_PLACEHOLDER`**. You need a NEAR testnet account in Meteor or My
 | **(d)** Under **Pay from another chain**, click **Preview route** (try Base/USDC, then Bitcoin/BTC) | A live NEAR Intents quote: "You send ≈ … · Freelancer receives 5.00 USDC · ~35 seconds" |
 | **(e)** **Connect NEAR wallet**, then **Pay X NEAR**, using a second testnet account | **Payment successful** with a link to the transaction on testnet.nearblocks.io. `/dashboard` shows the invoice as **paid**. |
 
-Screenshots: [create + TEE badge](docs/screenshots/create-verified.png) · [proof modal with 8 checks](docs/screenshots/proof-modal.png) · [verified + paid + quote](docs/screenshots/pay-verified-paid.png) · [tampered link](docs/screenshots/pay-tampered.png) · [landing](docs/screenshots/home.png). Placeholder for the deployed site: `docs/screenshots/live-demo.png` (to be added).
+Screenshots: [create + TEE badge](docs/screenshots/create-verified.png) · [proof modal with 8 checks](docs/screenshots/proof-modal.png) · [verified + paid + quote](docs/screenshots/pay-verified-paid.png) · [tampered link](docs/screenshots/pay-tampered.png) · [landing](docs/screenshots/home.png). From the live site: [proof modal with all 8 checks](docs/screenshots/demo-proof-checks.png) · [verified pay page](docs/screenshots/demo-pay-verified.png) · [live NEAR Intents quote](docs/screenshots/demo-live-quote.png).
 
 ## For judges: verify in 5 minutes
 

@@ -27,3 +27,15 @@ target/
 
 # Vercel local build output / project link
 .vercel
+
+# Demo video: generated media and recordings are never committed
+demo-output/
+scripts/demo-video/public/
+scripts/demo-video/out/
+*.mp4
+*.webm
+*.mov
+*.mp3
+*.wav
+scripts/demo-video/src/generated/
+scripts/demo-video/*.log

@@ -1,0 +1,6 @@
+{
+  "_about": "The recorder's event marks are wall-clock times and drift (up to ~2.5 s) against the screencast video timeline. These times were read off the actual frames with contact-sheet.mjs and override the recorded marks (seconds in each clip).",
+  "c2_create": { "typeStart": 3.7, "aiStart": 13.2, "aiEnd": 15.7, "fields": 18.4, "badge": 20.6 },
+  "c3_proof": { "modalOpen": 3.0, "topEnd": 6.6, "checksScrollFrom": 11.5, "checksEnd": 19.5 },
+  "c6_quotes": { "baseRequested": 4.6, "baseLoadingCut": 6.0, "baseResume": 9.4, "baseQuote": 10.1, "solRequested": 23.0, "solQuote": 25.3 }
+}

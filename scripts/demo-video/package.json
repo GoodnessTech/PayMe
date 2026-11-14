@@ -1,0 +1,32 @@
+{
+  "name": "payme-demo-video",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "description": "PayMe hackathon demo video: Playwright recording + Remotion edit. Not part of the app build.",
+  "scripts": {
+    "record": "node record.mjs",
+    "terminal": "node terminal.mjs",
+    "voiceover": "node voiceover.mjs",
+    "studio": "remotion studio src/index.ts",
+    "render:main": "remotion render src/index.ts PayMeDemo ../../demo-output/payme-demo-16x9.mp4 --codec=h264 --crf=20 --timeout=180000",
+    "render:vertical": "remotion render src/index.ts PayMeDemoVertical ../../demo-output/payme-demo-4x5.mp4 --codec=h264 --crf=20 --timeout=180000",
+    "render:vo": "remotion render src/index.ts PayMeDemoVoiceover ../../demo-output/voiceover-draft.mp3 --codec=mp3 --timeout=180000",
+    "mux:vo": "node -e \"import('./ffmpeg-path.mjs').then(m=>require('child_process').execFileSync(m.findFfmpeg(),['-y','-v','error','-i','../../demo-output/payme-demo-16x9.mp4','-i','../../demo-output/voiceover-draft.mp3','-map','0:v','-map','1:a','-c:v','copy','-c:a','aac','-b:a','160k','-shortest','../../demo-output/payme-demo-16x9-voiceover.mp4'],{stdio:'inherit'}))\"",
+    "trim": "node trim-manual.mjs",
+    "assets": "node prepare.mjs"
+  },
+  "dependencies": {
+    "remotion": "4.0.543",
+    "@remotion/cli": "4.0.543",
+    "@remotion/google-fonts": "4.0.543",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "playwright": "1.65.1",
+    "msedge-tts": "2.1.1"
+  },
+  "devDependencies": {
+    "typescript": "^5.5.3",
+    "@types/react": "^18.3.5"
+  }
+}
